@@ -1,0 +1,159 @@
+/* Adjust the overall layout */
+.login {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(90deg, #f15b46 50%, white 50%);
+}
+
+.redPart {
+  flex: 1;
+  padding: 2rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.redPart * {
+  color: #ffffff;
+}
+
+.whitePart {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.loginButton {
+  background-color: #f15b46;
+  color: hsl(0, 0%, 100%);
+  border: none;
+  padding: 0.6rem 1.7rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.loginButton:hover {
+  background-color: #d64b37;
+}
+
+.forgotPassword {
+  margin-top: 1rem;
+  color: #666666;
+  text-decoration: underline;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
+}
+
+.loginEmail {
+  border: hidden;
+  background-color: lightgray;
+  padding: 0.8rem;
+  width: 100%;
+}
+
+.loginPassword {
+  border: hidden;
+  background-color: lightgray;
+  padding: 0.8rem;
+  width: 100%;
+}
+
+.studyLogin {
+  width: 70%;
+  height: auto;
+}
+
+.quotes {
+  margin-top: 2rem;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+}
+
+.line {
+  margin-top: 40px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/* Media query for tablets */
+@media (max-width: 768px) {
+  .login {
+    flex-direction: column;
+    background: linear-gradient(180deg, #f15b46 50%, white 50%);
+  }
+
+  .redPart {
+    order: 1;
+    padding: 1rem;
+  }
+
+  .whitePart {
+    order: 2;
+    padding: 1rem;
+  }
+
+  .loginForm {
+    width: 100%;
+  }
+
+  .forgotPassword {
+    text-align: right;
+  }
+
+  .loginButton {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .loginEmail,
+  .loginPassword {
+    width: 100%;
+  }
+
+  .studyLogin {
+    width: 100%;
+  }
+
+  .quotes {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .line {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
