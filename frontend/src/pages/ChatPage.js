@@ -1,70 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChatState } from "../context/ChatProvider";
-import SideBar from "../components/miscellaneous/SideBar";
-import MyChats from "../components/miscellaneous/MyChats";
-import ChatBox from "../components/miscellaneous/ChatBox";
-import "./MyChatBox.css";
+import { useNavigate } from "react-router-dom";
+import SideDrawer from "../components/miscellaneous/SideDrawer";
+import MyChats from "../components/MyChats";
+import ChatBox from "../components/ChatBox";
+import { Box } from "@chakra-ui/layout";
 
 export const ChatPage = () => {
   const { user } = ChatState();
-  const [userName, setUserName] = useState("");
+  // const [userName, setUserName] = useState("");
+  // const [showLogoutModal, setShowLogoutModal] = useState(false);
+  // const logoutModalRef = useRef(null);
+  // const offcanvasRef = useRef(null);
+  // const [modalInstance, setModalInstance] = useState(null);
 
-  // Set the user's name when the component mounts
-  useEffect(() => {
-    if (user && user.name) {
-      setUserName(user.name);
-    }
-  }, [user]);
+  // const history = useNavigate();
+
+  // // Set the user's name when the component mounts
+  // useEffect(() => {
+  //   if (user && user.name) {
+  //     setUserName(user.name);
+  //   }
+  // }, [user]);
+
+  // useEffect(() => {
+  //   const logoutModal = logoutModalRef.current;
+  //   if (showLogoutModal && logoutModal) {
+  //     const modal = new window.bootstrap.Modal(logoutModal, {});
+  //     modal.show();
+  //     setModalInstance(modal); // Store the modal instance
+
+  //     // Remove the backdrop when the modal is hidden
+  //     modal._element.addEventListener("hidden.bs.modal", () => {
+  //       const backdrop = document.querySelector(".modal-backdrop");
+  //       if (backdrop) {
+  //         backdrop.remove();
+  //       }
+  //     });
+  //   }
+  // }, [showLogoutModal]);
+
+  // const handleLogoutClick = () => {
+  //   // Close the offcanvas
+  //   const offcanvas = offcanvasRef.current;
+  //   if (offcanvas) {
+  //     const offcanvasInstance =
+  //       window.bootstrap.Offcanvas.getInstance(offcanvas);
+  //     offcanvasInstance.hide();
+  //   }
+  //   setShowLogoutModal(true);
+  //   localStorage.removeItem("userInfo");
+  //   history("/login");
+  // };
+
+  // const handleConfirmLogout = () => {
+  //   // Perform logout action here
+  //   console.log("Logout confirmed");
+  //   setShowLogoutModal(false);
+  //   modalInstance.hide();
+  // };
+
+  // const handleCancelLogout = () => {
+  //   // User canceled logout
+  //   console.log("Logout canceled");
+  //   setShowLogoutModal(false); // Close the modal
+  //   modalInstance.hide(); // Hide the modal
+  // };
 
   return (
-    <div>
-      <div>
-        <div className="navbar">
-          <div className="navbar-brand">Chat App</div>
-          <div className="profile-icon">
-            <span className="avatar-circle">
-              <i className="fas fa-user-circle"></i>
-            </span>
-            <button
-              className="btn btn-transparent"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasRight"
-              aria-controls="offcanvasRight" // Handle the click event
-            >
-              {userName}
-            </button>
-          </div>
-        </div>
-        <div className="chat-page">
-          {user && <SideBar />}
-          <div className="chats-box">{user && <MyChats />}</div>
-          <div className="chats-box">{user && <ChatBox />}</div>
-        </div>
-      </div>
-      {/* Render the offcanvas component conditionally */}
-      <div>
-        <div
-          className="offcanvas offcanvas-end"
-          tabIndex="-1"
-          id="offcanvasRight"
-          aria-labelledby="offcanvasRightLabel"
-        >
-          <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasRightLabel">
-              Offcanvas right
-            </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-              // onClick={() => setUsernameClicked(false)} // Close the offcanvas
-            ></button>
-          </div>
-          <div className="offcanvas-body">Profile</div>
-        </div>{" "}
-      </div>
+    <div style={{ width: "100%" }}>
+      {user && <SideDrawer />}
+      <Box d="flex" justifyContent="space-between" w="100%" h="91.5vh" p="10px">
+        {user && <MyChats />}
+        {user && <ChatBox />}
+      </Box>
     </div>
   );
 };

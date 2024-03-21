@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import studyLogin from "./assets/studyLogin.svg";
-import "./login.css";
+import "./signup.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -148,7 +148,7 @@ function Signup() {
             />
           </div>
           <div className="forgotPassword">
-            Already have an account? <a href="login">Login Here</a>
+            Already have an account? <a href="/login">Login Here</a>
           </div>
           <button className="loginButton" type="submit" disabled={loading}>
             {loading ? "Loading..." : "Signup"}
