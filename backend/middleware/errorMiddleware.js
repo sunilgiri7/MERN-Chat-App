@@ -1,6 +1,5 @@
 const notFound = (req, res, next) => {
   const error = new Error(`Not Found: ${req.originalUrl}`);
-  res.error(error);
   next(error);
 };
 
