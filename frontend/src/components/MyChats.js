@@ -3,13 +3,16 @@ import { ChatState } from "../context/ChatProvider";
 import { Box, Button, Stack, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { ChatLoading } from "./ChatLoading";
+import { getSender } from "../config/ChatLogics";
+import { AddIcon } from "@chakra-ui/icons";
+import GroupChatModel from "./miscellaneous/GroupChatModel";
 
-function MyChats() {
+function MyChats({ fetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const toast = useToast();
+
   const fetchChats = async () => {
-    // console.log(user._id);
     try {
       const config = {
         headers: {
@@ -18,11 +21,10 @@ function MyChats() {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
       setChats(data);
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: "Error Occurred!",
         description: "Failed to Load the chats",
         status: "error",
         duration: 5000,
@@ -35,7 +37,8 @@ function MyChats() {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
+
   return (
     <Box
       d={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -58,15 +61,17 @@ function MyChats() {
         alignItems="center"
       >
         My Chats
-        {/* <GroupChatModal>
+        <GroupChatModel>
           <Button
-            d="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            // colorScheme="teal"
             rightIcon={<AddIcon />}
+            onClick={() => {}} // Add functionality to create a new group chat
+            // paddingLeft="10"
           >
             New Group Chat
           </Button>
-        </GroupChatModal> */}
+        </GroupChatModel>
       </Box>
       <Box
         d="flex"
@@ -74,14 +79,15 @@ function MyChats() {
         p={3}
         bg="#F8F8F8"
         w="100%"
-        h="100%"
+        h="calc(100vh - 200px)"
         borderRadius="lg"
         overflowY="hidden"
       >
         {chats ? (
-          <Stack overflowY="scroll">
+          <Stack overflowY="scroll" spacing={3} maxH="100%">
             {chats.map((chat) => (
               <Box
+                key={chat._id}
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
                 bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
@@ -89,13 +95,12 @@ function MyChats() {
                 px={3}
                 py={2}
                 borderRadius="lg"
-                key={chat._id}
               >
-                {/* <Text>
+                <Text>
                   {!chat.isGroupChat
                     ? getSender(loggedUser, chat.users)
                     : chat.chatName}
-                </Text> */}
+                </Text>
                 {chat.latestMessage && (
                   <Text fontSize="xs">
                     <b>{chat.latestMessage.sender.name} : </b>

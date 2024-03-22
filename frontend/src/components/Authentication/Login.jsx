@@ -3,6 +3,7 @@ import studyLogin from "./assets/studyLogin.svg";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -91,7 +92,9 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="forgotPassword">Forgot Password?</div>
+            <div className="forgotPassword">
+              <Link to="/signup">Create Account?</Link>
+            </div>
             <button className="loginButton" type="submit" disabled={loading}>
               {loading ? "Loading..." : "Login"}
             </button>

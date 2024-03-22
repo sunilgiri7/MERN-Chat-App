@@ -22,7 +22,15 @@ function ProfileModel({ user, children }) {
       {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
-        <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
+        <IconButton
+          marginLeft="10px"
+          marginBottom="10px"
+          d={{ base: "flex" }}
+          icon={<ViewIcon />}
+          onClick={onOpen}
+        >
+          View
+        </IconButton>
       )}
       <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
