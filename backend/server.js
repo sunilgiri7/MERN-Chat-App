@@ -10,6 +10,7 @@ const { Socket } = require("socket.io");
 const { emit } = require("nodemon");
 const notificationsRouter = require("./routes/notifications");
 const Notification = require("./models/Notification"); // Import the Notification model
+const path = require("path");
 
 dotenv.config();
 connectDB();
@@ -24,7 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
-// app.use("/api/notifications", notificationsRouter);
+app.use("/api/notifications", notificationsRouter);
 
 app.use(notFound);
 app.use(errorHandler);

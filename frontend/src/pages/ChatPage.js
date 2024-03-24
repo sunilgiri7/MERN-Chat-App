@@ -3,7 +3,7 @@ import { ChatState } from "../context/ChatProvider";
 import SideDrawer from "../components/miscellaneous/SideDrawer";
 import MyChats from "../components/MyChats";
 import ChatBox from "../components/ChatBox";
-import { Box, Flex } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/layout";
 
 export const ChatPage = () => {
   const { user } = ChatState();

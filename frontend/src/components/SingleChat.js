@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -36,13 +36,48 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
 
+  const fetchMessages = useCallback(async () => {
+    if (!selectedChat) return;
+
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/message/${selectedChat._id}`,
+        config
+      );
+      setMessages(data);
+      setLoading(false);
+      socket.emit("join chat", selectedChat._id);
+    } catch (error) {
+      toast({
+        title: "Error Occurred!",
+        description: "Failed to Load the Messages",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }, [selectedChat, user.token, toast]);
+
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setsocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
-  }, []);
+
+    return () => {
+      // Clean up the socket connection when the component unmounts
+      socket.disconnect();
+    };
+  }, [user]);
 
   useEffect(() => {
     if (selectedChat) {
@@ -50,7 +85,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
       selectedChatCompare = selectedChat;
     }
-  }, [selectedChat]);
+  }, [selectedChat, fetchMessages]);
 
   useEffect(() => {
     const getSenderFull = (loggedUser, users) => {
@@ -96,36 +131,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const handleGoBack = () => {
     setSelectedChat("");
-  };
-
-  const fetchMessages = async () => {
-    if (!selectedChat) return;
-
-    try {
-      setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
-        config
-      );
-      setMessages(data);
-      setLoading(false);
-      socket.emit("join chat", selectedChat._id);
-    } catch (error) {
-      toast({
-        title: "Error Occurred!",
-        description: "Failed to Load the Messages",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
   };
 
   const sendMessage = async (e) => {
@@ -192,7 +197,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   return (
-    <Flex direction="column" h="100%">
+    <Flex direction="column" h="100%" w="100%">
       {selectedChat ? (
         <>
           <Flex

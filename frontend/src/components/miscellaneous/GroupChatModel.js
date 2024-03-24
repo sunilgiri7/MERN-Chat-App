@@ -15,16 +15,14 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-// import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 
 const GroupChatModel = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [groupChatName, setGroupChatName] = useState();
+  const [groupChatName, setGroupChatName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -32,7 +30,6 @@ const GroupChatModel = ({ children }) => {
   const { user, chats, setChats } = ChatState();
 
   const handleGroup = (userToAdd) => {
-    // Check if the user is already in the selectedUsers array
     const isUserSelected = selectedUsers.some(
       (user) => user._id === userToAdd._id
     );
@@ -52,7 +49,6 @@ const GroupChatModel = ({ children }) => {
   };
 
   const handleSearch = async (query) => {
-    setSearch(query);
     if (!query) {
       return;
     }
@@ -64,7 +60,7 @@ const GroupChatModel = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${query}`, config); // Use query instead of search
+      const { data } = await axios.get(`/api/user?search=${query}`, config);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -85,7 +81,6 @@ const GroupChatModel = ({ children }) => {
 
   const handleSubmit = async () => {
     if (!groupChatName || selectedUsers.length === 0) {
-      // Check if selectedUsers length is 0
       toast({
         title: "Please fill all the fields",
         status: "warning",
@@ -130,6 +125,7 @@ const GroupChatModel = ({ children }) => {
       });
     }
   };
+
   return (
     <>
       <span onClick={onOpen}>{children}</span>
@@ -171,7 +167,6 @@ const GroupChatModel = ({ children }) => {
               ))}
             </Box>
             {loading ? (
-              // <ChatLoading />
               <div>Loading...</div>
             ) : (
               searchResult
