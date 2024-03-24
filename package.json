@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "build": "npm install && tsc && npm test && eslint . && webpack"
+    "build": "cd frontend && npm install && npm run build"
   },
   "author": "Sunil giri",
   "license": "ISC",
