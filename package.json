@@ -11,6 +11,7 @@
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
     "@chakra-ui/react": "^1.6.8",
+    "@emotion/styled": "^11.11.0",
     "@sideway/address": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
