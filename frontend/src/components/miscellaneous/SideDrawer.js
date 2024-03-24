@@ -20,6 +20,7 @@ import {
   MenuDivider,
   Avatar,
   useDisclosure,
+  Badge,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
@@ -31,8 +32,6 @@ import { ChatLoading } from "../ChatLoading";
 import { getSender } from "../../config/ChatLogics";
 import { Icon } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
-import NotificationBadge, { Effect } from "react-notification-badge";
-// import Notification from "../../../../backend/models/Notification";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -118,28 +117,6 @@ function SideDrawer() {
     }
   };
 
-  // /* const saveNotification = async (userId, message) => {
-  //   try {
-  //     console.log("djqbdjkdq");
-  //     const config = {
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //     };
-  //     const { data } = await axios.post(
-  //       "/api/notifications",
-  //       {
-  //         userId,
-  //         message,
-  //       },
-  //       config
-  //     );
-  //     console.log("Notification saved:", data);
-  //   } catch (error) {
-  //     console.error("Error saving notification:", error);
-  //   }
-  // }; */
-
   return (
     <>
       <Flex
@@ -168,10 +145,14 @@ function SideDrawer() {
         </Text>
         <Menu>
           <MenuButton as={Button} p={1}>
-            <NotificationBadge
-              count={notification.length}
-              effect={Effect.SCALE}
-            />
+            <Badge
+              colorScheme="red"
+              variant="solid"
+              borderRadius="full"
+              fontSize="xs"
+            >
+              {notification.length}
+            </Badge>
             <BellIcon marginBottom="1" />
           </MenuButton>
           <MenuList pl={2} pr={2}>
@@ -184,7 +165,6 @@ function SideDrawer() {
                   onClick={() => {
                     setSelectedChat(notify.chat);
                     setNotification(notification.filter((n) => n !== notify));
-                    //saveNotification(notify._id, notify.message);
                   }}
                 >
                   {notify.chat.isGroupChat
