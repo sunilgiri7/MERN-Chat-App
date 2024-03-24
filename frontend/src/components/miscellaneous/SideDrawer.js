@@ -28,16 +28,27 @@ import { ChatState } from "../../context/ChatProvider";
 import ProfileModel from "./ProfileModel";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatLoading } from "../ChatLoading";
+import { getSender } from "../../config/ChatLogics";
+import { Icon } from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
+import NotificationBadge, { Effect } from "react-notification-badge";
+// import Notification from "../../../../backend/models/Notification";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingChat, setLoadingChat] = useState(false); // Initialize with false
-  const { setSelectedChat, user, setChats, chats } = ChatState();
+  const [loadingChat, setLoadingChat] = useState(false);
+  const {
+    setSelectedChat,
+    user,
+    setChats,
+    chats,
+    notification,
+    setNotification,
+  } = ChatState();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const toast = useToast();
 
   const logoutHandler = () => {
@@ -65,8 +76,6 @@ function SideDrawer() {
         },
       };
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-      console.log(data);
-
       setSearchResult(data);
     } catch (error) {
       toast({
@@ -109,6 +118,28 @@ function SideDrawer() {
     }
   };
 
+  // /* const saveNotification = async (userId, message) => {
+  //   try {
+  //     console.log("djqbdjkdq");
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //       },
+  //     };
+  //     const { data } = await axios.post(
+  //       "/api/notifications",
+  //       {
+  //         userId,
+  //         message,
+  //       },
+  //       config
+  //     );
+  //     console.log("Notification saved:", data);
+  //   } catch (error) {
+  //     console.error("Error saving notification:", error);
+  //   }
+  // }; */
+
   return (
     <>
       <Flex
@@ -119,8 +150,8 @@ function SideDrawer() {
         borderWidth="5px"
       >
         <Tooltip label="Search User to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
-            <i className="fas fa-search"></i>
+          <Button variant="ghost" onClick={onOpen} mr={2} alignItems="center">
+            <Icon as={FaSearch} mr={2} />
             <Text d={{ base: "none", md: "flex" }} px="3" marginTop="3">
               Search User
             </Text>
@@ -136,23 +167,43 @@ function SideDrawer() {
           Pigeons
         </Text>
         <Menu>
-          <MenuButton p={1}>
+          <MenuButton as={Button} p={1}>
+            <NotificationBadge
+              count={notification.length}
+              effect={Effect.SCALE}
+            />
             <BellIcon marginBottom="1" />
           </MenuButton>
+          <MenuList pl={2} pr={2}>
+            {!notification.length ? (
+              <MenuItem>No New Messages</MenuItem>
+            ) : (
+              notification.map((notify) => (
+                <MenuItem
+                  key={notify._id}
+                  onClick={() => {
+                    setSelectedChat(notify.chat);
+                    setNotification(notification.filter((n) => n !== notify));
+                    //saveNotification(notify._id, notify.message);
+                  }}
+                >
+                  {notify.chat.isGroupChat
+                    ? `New Message in ${notify.chat.chatName}`
+                    : `New Message from ${getSender(user, notify.chat.users)}`}
+                </MenuItem>
+              ))
+            )}
+          </MenuList>
         </Menu>
         <Menu>
-          <MenuButton
-            marginBottom="1"
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            background="none"
-          >
+          <MenuButton as={Button} marginBottom="1" background="none">
             <Avatar
               size="sm"
               cursor="pointer"
               name={user.name}
               src={user.pic}
             />
+            <ChevronDownIcon />
           </MenuButton>
           <MenuList>
             <ProfileModel user={user}>
@@ -183,7 +234,7 @@ function SideDrawer() {
               searchResult?.map((searchedUser) => (
                 <UserListItem
                   key={searchedUser._id}
-                  user={searchedUser} // Pass the searched user data as props
+                  user={searchedUser}
                   handleFunction={() => accessChat(searchedUser._id)}
                 />
               ))

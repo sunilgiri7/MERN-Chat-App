@@ -19,12 +19,15 @@ import { getSender, getSenderFull } from "../config/ChatLogics";
 import "./styles.css";
 import ScrollableChats from "./ScrollableChats";
 import { io } from "socket.io-client";
+import Lottie from "react-lottie";
+import animation from "../animation/typing.json";
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -36,7 +39,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
-    socket.on("connection", () => setsocketConnected(true));
+    socket.on("connected", () => setsocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
   }, []);
@@ -50,12 +53,41 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("Message Received", (newMessageReceived) => {
+    const getSenderFull = (loggedUser, users) => {
+      return users[0]._id === loggedUser._id ? users[1].name : users[0].name;
+    };
+    socket.on("Message Received", async (newMessageReceived) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        //give notify
+        try {
+          // Save the notification to the database
+          const config = {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          };
+          const { data } = await axios.post(
+            "/api/notifications",
+            {
+              userId: user._id,
+              message: `New message from ${getSenderFull(
+                user,
+                newMessageReceived.chat.users
+              )}`,
+            },
+            config
+          );
+          console.log("Notification saved:", data);
+
+          if (!notification.includes(newMessageReceived)) {
+            setNotification([newMessageReceived, ...notification]);
+            setFetchAgain(!fetchAgain);
+          }
+        } catch (error) {
+          console.error("Error saving notification:", error);
+        }
       } else {
         setMessages([...messages, newMessageReceived]);
       }
@@ -136,20 +168,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
     if (!socketConnected) return;
+
     if (!typing) {
       setTyping(true);
       socket.emit("typing", selectedChat._id);
     }
+
     let lastTypingTime = new Date().getTime();
-    var timerLength = 3000;
+    const timerLength = 2000; // 3 seconds
     setTimeout(() => {
-      var timeNow = new Date().getTime();
-      var timeDiff = timeNow - lastTypingTime;
+      const timeNow = new Date().getTime();
+      const timeDiff = timeNow - lastTypingTime;
 
       if (timeDiff >= timerLength && typing) {
         socket.emit("stop typing", selectedChat._id);
         setTyping(false);
+        // Reset isTyping to false after the delay
+        // setIsTyping(false);
       }
     }, timerLength);
   };
@@ -201,7 +238,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Box>
 
           <FormControl p={3} borderTop="1px solid #E2E8F0" bg="#F7FAFC">
-            {isTyping ? <div>Loading...</div> : <></>}
+            {isTyping ? (
+              <Flex align="center">
+                <Text fontSize="sm" color="gray.500">
+                  <Lottie
+                    options={{
+                      loop: true,
+                      autoplay: true,
+                      animationData: animation,
+                    }}
+                    height={50} // Adjust the height as needed
+                    width={50} // Adjust the width as needed
+                  />
+                </Text>
+              </Flex>
+            ) : null}
             <Input
               variant="filled"
               bg="#E0E0E0"
