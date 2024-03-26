@@ -38,6 +38,7 @@ function SideDrawer() {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
   const {
     setSelectedChat,
     user,
@@ -210,14 +211,16 @@ function SideDrawer() {
             </Box>
             {loading ? (
               <ChatLoading />
-            ) : (
-              searchResult?.map((searchedUser) => (
+            ) : Array.isArray(searchResult) ? (
+              searchResult.map((searchedUser) => (
                 <UserListItem
                   key={searchedUser._id}
                   user={searchedUser}
                   handleFunction={() => accessChat(searchedUser._id)}
                 />
               ))
+            ) : (
+              <Text>No search results found</Text>
             )}
             {loadingChat && <Spinner ml="auto" />}
           </DrawerBody>
