@@ -10,13 +10,26 @@ const { Socket } = require("socket.io");
 const { emit } = require("nodemon");
 const notificationsRouter = require("./routes/notifications");
 const Notification = require("./models/Notification"); // Import the Notification model
-const path = require("path");
+const express = require("express");
+const cors = require("cors");
 
 dotenv.config();
 connectDB();
 
 const app = express();
 app.use(express.json());
+
+// Enable CORS for all routes
+app.use(
+  cors({
+    origin: "https://main--chatapp0011.netlify.app", // Replace with your Netlify app URL
+  })
+);
+
+// Your API routes
+app.post("/api/user/login", (req, res) => {
+  // ...
+});
 
 app.get("/", (req, res) => {
   res.send("API is running");
