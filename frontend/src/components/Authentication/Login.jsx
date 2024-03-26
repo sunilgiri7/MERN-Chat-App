@@ -26,7 +26,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        "https://your-render-app-name.onrender.com/api/user/login",
+        "/api/user/login",
         { email, password },
         config
       );
