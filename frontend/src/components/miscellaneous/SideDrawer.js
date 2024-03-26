@@ -38,7 +38,6 @@ function SideDrawer() {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const [searchResult, setSearchResult] = useState([]);
   const {
     setSelectedChat,
     user,
@@ -211,7 +210,7 @@ function SideDrawer() {
             </Box>
             {loading ? (
               <ChatLoading />
-            ) : Array.isArray(searchResult) ? (
+            ) : Array.isArray(searchResult) && searchResult.length > 0 ? (
               searchResult.map((searchedUser) => (
                 <UserListItem
                   key={searchedUser._id}
