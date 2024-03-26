@@ -2,13 +2,9 @@
   "name": "lets-talk",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
-    "install-backend": "cd backend && npm install",
-    "install-frontend": "cd frontend && npm install",
-    "build-frontend": "cd frontend && npm run build",
     "build": "npm run install-backend && npm run install-frontend && npm run build-frontend"
   },
   "author": "Sunil giri",
