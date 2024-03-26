@@ -26,7 +26,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        "https://mern-chat-app-1is2.onrender.com/api/user/login",
+        "/api/user/login",
         { email, password },
         config
       );
