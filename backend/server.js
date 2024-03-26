@@ -7,6 +7,7 @@ const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const notificationsRouter = require("./routes/notifications");
 const Notification = require("./models/Notification"); // Import the Notification model
+const cors = require("cors");
 
 dotenv.config();
 connectDB();
