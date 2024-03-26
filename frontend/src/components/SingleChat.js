@@ -48,7 +48,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `${process.env.REACT_APP_BASE_URL_BACKEND}/api/message/${selectedChat._id}`,
         config
       );
       setMessages(data);
@@ -104,7 +104,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             },
           };
           const { data } = await axios.post(
-            "/api/notifications",
+            `${process.env.REACT_APP_BASE_URL_BACKEND}/api/notifications`,
             {
               userId: user._id,
               message: `New message from ${getSenderFull(
@@ -145,7 +145,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
 
         const { data } = await axios.post(
-          "/api/message",
+          `${process.env.REACT_APP_BASE_URL_BACKEND}/api/message`,
           {
             content: newMessage,
             chatId: selectedChat._id,

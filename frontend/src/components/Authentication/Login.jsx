@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useNavigate();
+  // const { user, loginClicked, error, isLoading } = UseGlobalContext(); //
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,7 +27,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        "/api/user/login",
+        `${process.env.REACT_APP_BASE_URL_BACKEND}/api/user/login`,
         { email, password },
         config
       );
