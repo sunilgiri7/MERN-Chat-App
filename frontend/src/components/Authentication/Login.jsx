@@ -27,7 +27,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BASE_URL_BACKEND}/api/user/login`,
+        `${process.env.REACT_APP_BASE_URL_BACKEND}api/user/login`,
         { email, password },
         config
       );
